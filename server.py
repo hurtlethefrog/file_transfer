@@ -18,3 +18,23 @@ def retrieve_file(name, sock):
     else:
         sock.send("ERR")
     sock.close()
+
+def exe():
+    host = "127.0.0.1"
+    port = 5000
+
+    s = socket.socket()
+    s.bind((host, port))
+
+    s.listen(5)
+
+    print("Server up")
+    while True:
+        c, addr = s.accept()
+        print(f"connected to {str(addr)}")
+        t = threading.Thread(target=retrieve_file, args=("retrThread", c))
+        t.start
+    s.close()
+
+if __name__ == "__main__":
+    exe()
