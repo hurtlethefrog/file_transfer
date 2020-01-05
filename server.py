@@ -4,11 +4,12 @@ import os
 
 
 def retrieve_file(name, sock):
-    filename = sock.recv(1024)
+    print("getting file")
+    filename = sock.recv(1024).decode()
     if os.path.isfile(filename):
-        sock.send(f"FILE EXISTS : SIZE {str(os.path.getsize(filename))}")
-        userResponse = sock.recv(1024)
-        if userResponse[:2] == "OK":
+        sock.send(f"FILE EXISTS : SIZE {str(os.path.getsize(filename))}".encode("utf-8"))
+        userResponse = sock.recv(1024).decode()
+        if userResponse[:11] == "Downloading":
             with open(filename, "rb") as f:
                 bytesToSend = f.read(1024)
                 sock.send(bytesToSend)
@@ -16,12 +17,12 @@ def retrieve_file(name, sock):
                     bytesToSend = f.read(1024)
                     sock.send(bytesToSend)
     else:
-        sock.send("ERR")
+        sock.send("ERR".encode())
     sock.close()
 
 def exe():
     host = "127.0.0.1"
-    port = 5000
+    port = 5003
 
     s = socket.socket()
     s.bind((host, port))
@@ -33,7 +34,7 @@ def exe():
         c, addr = s.accept()
         print(f"connected to {str(addr)}")
         t = threading.Thread(target=retrieve_file, args=("retrThread", c))
-        t.start
+        t.start()
     s.close()
 
 if __name__ == "__main__":
