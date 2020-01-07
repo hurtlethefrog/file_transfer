@@ -2,4 +2,6 @@
 
 With a TCP connection a user can request a file for download from the server's storage
 
-the application includes basic error handling and allows for the transfer of images aswell as text
+The application includes basic error handling and transfers data as binary object so can do more than text
+
+Is also able to list directory contents for user to choose file from
