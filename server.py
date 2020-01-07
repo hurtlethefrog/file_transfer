@@ -5,6 +5,7 @@ import os
 
 def retrieve_file(name, sock):
     print("getting file")
+    
     filename = sock.recv(1024).decode()
     if os.path.isfile(filename):
         sock.send(f"FILE EXISTS : SIZE {str(os.path.getsize(filename))}".encode())
