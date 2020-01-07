@@ -7,7 +7,7 @@ def retrieve_file(name, sock):
     print("getting file")
     filename = sock.recv(1024).decode()
     if os.path.isfile(filename):
-        sock.send(f"FILE EXISTS : SIZE {str(os.path.getsize(filename))}".encode("utf-8"))
+        sock.send(f"FILE EXISTS : SIZE {str(os.path.getsize(filename))}".encode())
         userResponse = sock.recv(1024).decode()
         if userResponse[:11] == "Downloading":
             with open(filename, "rb") as f:
