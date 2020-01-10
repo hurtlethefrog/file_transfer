@@ -21,7 +21,7 @@ def exe():
             filesize = int(data[19:])
             message = input(
                 f"File Size:{str(filesize)}Bytes. Download? (Y/N) -- ")
-            if message == "Y":
+            if message.upper() == "Y":
                 s.send('go'.encode())
                 f = open(f'new_{filename}', "wb")
                 data = s.recv(1024)
@@ -34,6 +34,8 @@ def exe():
                     print("{0:.2f}".format(
                         (totalSize / float(filesize)) * 100) + "%")
                 print("Done")
+                s.close()
+            else:
                 s.close()
         else:
             print("File does not exist")
