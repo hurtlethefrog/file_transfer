@@ -28,7 +28,6 @@ def retrieve_file(name, sock):
         filenames = []
         with os.scandir("./") as db:
             for entry in db:
-                print(type(entry.name))
                 if entry.name != "server.py":
                     filenames.append(entry.name)
         # weird pickle thing
