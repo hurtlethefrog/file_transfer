@@ -13,15 +13,15 @@ def exe():
     search = input("Do you know the file name you're looking for? (Y/N):")
     s.send(search.encode())
 
-    if search == "Y":
-        filename = input("Filename? :")
+    if search.upper() == "Y":
+        filename = input("Filename?(case sensitive:")
         s.send(filename.encode())
         data = s.recv(1024).decode()
         if data[:11] == "FILE EXISTS":
             filesize = int(data[19:])
             message = input(
                 f"File Size:{str(filesize)}Bytes. Download? (Y/N) -- ")
-            if message == "Y":
+            if message.upper() == "Y":
                 s.send('go'.encode())
                 f = open(f'new_{filename}', "wb")
                 data = s.recv(1024)
@@ -35,13 +35,15 @@ def exe():
                         (totalSize / float(filesize)) * 100) + "%")
                 print("Done")
                 s.close()
+            else:
+                s.close()
         else:
             print("File does not exist")
             s.close()
 
-    elif search == "N":
+    elif search.upper() == "N":
         dir_list = pickle.loads(s.recv(1024))
-        # comprehension not nessicary but I wanted to use one
+        # comprehension not necessary but I wanted to use one
         print("Here is a file list to choose from:")
         time.sleep(1)
         [print(entry) for entry in dir_list]
@@ -52,7 +54,7 @@ def exe():
             filesize = int(data[19:])
             message = input(
                 f"File Size:{str(filesize)}Bytes. Download? (Y/N) -- ")
-            if message == "Y":
+            if message.upper() == "Y":
                 s.send('go'.encode())
                 f = open(f'new_{filename}', "wb")
                 data = s.recv(1024)
@@ -66,7 +68,8 @@ def exe():
                         (totalSize / float(filesize)) * 100) + "%")
                 print("Done")
                 s.close()
-
+            else:
+                s.close()
     s.close()
 
 
