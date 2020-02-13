@@ -5,25 +5,6 @@ import pickle
 
 
 def retrieve_file(name, sock):
-    # print("getting file")
-    # search = sock.recv(1024).decode()
-    # if search == "Y":
-    #     filename = sock.recv(1024).decode()
-    #     if filename != "server.py":
-    #         if os.path.isfile(filename):
-    #             sock.send(
-    #                 f"FILE EXISTS : SIZE {str(os.path.getsize(filename))}".encode())
-    #             user_response = sock.recv(1024).decode()
-    #             if user_response[:2] == "go":
-    #                 with open(filename, "rb") as f:
-    #                     bytes_to_send = f.read(1024)
-    #                     sock.send(bytes_to_send)
-    #                     while bytes_to_send != "":
-    #                         bytes_to_send = f.read(1024)
-    #                         sock.send(bytes_to_send)
-    #     else:
-    #         sock.send("ERR".encode())
-    # elif search == "N":
     print("sending dirlist")
     filenames = {}
     with os.scandir("./") as db:
@@ -36,11 +17,6 @@ def retrieve_file(name, sock):
     print(filename)
     # if statement from non GUI server file, could be removed
     if filename != "server.py" or "gui-server.py":
-        # if os.path.isfile(filename):
-        #     sock.send(
-        #         f"FILE EXISTS : SIZE {str(os.path.getsize(filename))}".encode())
-        #     user_response = sock.recv(1024).decode()
-        #     if user_response[:2] == "go":
         with open(filename, "rb") as f:
             bytes_to_send = f.read(1024)
             sock.send(bytes_to_send)
