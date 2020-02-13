@@ -28,6 +28,8 @@ root.geometry('600x600')
 
 root.title("Magnificent file stealing app")
 
+# 
+
 for i in range(1, 10):
     listButton = HoverButton(root, text=i, width=15, filesize=f'filesize:{i}', filename=i)
     listButton.grid(row=i, column=0, sticky=W)
@@ -53,6 +55,11 @@ def exe():
 
     s = socket.socket()
     s.connect((host, port))
+
+    root = Tk()
+    root.geometry('600x600')
+
+    root.title("Magnificent file stealing app")
 
     # search = input("Do you know the file name you're looking for? (Y/N):")
     # s.send(search.encode())
@@ -85,35 +92,40 @@ def exe():
     #         print("File does not exist")
     #         s.close()
 
-    elif search.upper() == "N":
-        dir_list = pickle.loads(s.recv(1024))
-        # comprehension not necessary but I wanted to use one
-        print("Here is a file list to choose from:")
-        time.sleep(1)
-        [print(entry) for entry in dir_list]
-        filename = input("Type the file name as displayed: ")
-        s.send(filename.encode())
-        data = s.recv(1024).decode()
-        if data[:11] == "FILE EXISTS":
-            filesize = int(data[19:])
-            message = input(
-                f"File Size:{str(filesize)}Bytes. Download? (Y/N) -- ")
-            if message.upper() == "Y":
-                s.send('go'.encode())
-                f = open(f'new_{filename}', "wb")
+    dir_list = pickle.loads(s.recv(1024))
+    # comprehension not necessary but I wanted to use one
+    print("Here is a file list to choose from:")
+    # create buttons with dict pickle from server
+
+    for i, (k, v) in enumerate(dir_list.items()):
+        listButton = HoverButton(root, text=k, width=15, filesize=f'filesize:{v}', filename=k)
+        listButton.grid(row=i, column=0, sticky=W)
+
+    
+    # [print(entry) for entry in dir_list]
+    filename = input("Type the file name as displayed: ")
+    s.send(filename.encode())
+    data = s.recv(1024).decode()
+    if data[:11] == "FILE EXISTS":
+        filesize = int(data[19:])
+        message = input(
+            f"File Size:{str(filesize)}Bytes. Download? (Y/N) -- ")
+        if message.upper() == "Y":
+            s.send('go'.encode())
+            f = open(f'new_{filename}', "wb")
+            data = s.recv(1024)
+            totalSize = len(data)
+            f.write(data)
+            while totalSize < filesize:
                 data = s.recv(1024)
-                totalSize = len(data)
+                totalSize += len(data)
                 f.write(data)
-                while totalSize < filesize:
-                    data = s.recv(1024)
-                    totalSize += len(data)
-                    f.write(data)
-                    print("{0:.2f}".format(
-                        (totalSize / float(filesize)) * 100) + "%")
-                print("Done")
-                s.close()
-            else:
-                s.close()
+                print("{0:.2f}".format(
+                    (totalSize / float(filesize)) * 100) + "%")
+            print("Done")
+            s.close()
+        else:
+            s.close()
     s.close()
 
 
