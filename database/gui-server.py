@@ -33,6 +33,7 @@ def retrieve_file(name, sock):
                 filenames.update({entry.name : size})
     sock.send(pickle.dumps(filenames))
     filename = sock.recv(1024).decode()
+    print(filename)
     # if statement from non GUI server file, could be removed
     if filename != "server.py" or "gui-server.py":
         # if os.path.isfile(filename):
@@ -52,7 +53,7 @@ def retrieve_file(name, sock):
 
 def exe():
     host = "127.0.0.1"
-    port = 4004
+    port = 4005
 
     s = socket.socket()
     s.bind((host, port))
